@@ -50,4 +50,5 @@ public abstract class Role {
 
     // Événement lié à l'utilisation des pouvoirs
     public void onRightClickItem(Player player, ItemStack item) {}
+    public void onLeftClickItem(Player player, ItemStack item) {}
 }

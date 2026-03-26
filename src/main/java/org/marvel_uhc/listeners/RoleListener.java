@@ -32,6 +32,29 @@ public class RoleListener implements Listener {
         }
     }
 
+    // 1. Le "Facteur" pour les pouvoirs (Clic Gauche)
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Action action = event.getAction();
+        ItemStack item = event.getItem();
+
+        if (item != null) {
+            PlayerData data = MarvelUhc.instance.GetData(player);
+            if (data != null && data.role != null) {
+
+                // Clic Droit
+                if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+                    data.role.onRightClickItem(player, item);
+                }
+                // Clic Gauche
+                else if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
+                    data.role.onLeftClickItem(player, item);
+                }
+            }
+        }
+    }
+
     // 2. Gestion du planage (Gliding) pour des pouvoirs comme Iron Man
     @EventHandler
     public void onMovement(PlayerMoveEvent event) {
