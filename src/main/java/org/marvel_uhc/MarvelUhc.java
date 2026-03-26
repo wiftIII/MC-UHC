@@ -12,7 +12,7 @@ import org.marvel_uhc.roles.Role;
 import org.marvel_uhc.roles.RoleManager;
 
 import org.bukkit.plugin.PluginManager;
-import org.marvel_uhc.commands.Host;
+import org.marvel_uhc.commands.HostCommands;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -71,9 +71,9 @@ public final class MarvelUhc extends JavaPlugin implements Listener
         pm.registerEvents(new StoneListener(), this);
 
         // Commandes :
-        Host host = new Host();
-        getCommand("host").setExecutor(host);
-        getCommand("say").setExecutor(host);
+        HostCommands hostCommands = new HostCommands();
+        getCommand("host").setExecutor(hostCommands);
+        getCommand("say").setExecutor(hostCommands);
 
         if(DEBUG_MODE)
         {
