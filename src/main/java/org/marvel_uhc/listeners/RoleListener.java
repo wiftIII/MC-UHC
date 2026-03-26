@@ -5,48 +5,55 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.util.Vector;
+import org.bukkit.inventory.ItemStack;
 import org.marvel_uhc.MarvelUhc;
 import org.marvel_uhc.PlayerData;
 
-import java.util.logging.Level;
+public class RoleListener implements Listener {
 
-public class RoleListener implements Listener
-{
-    // Constructeur
-    private MarvelUhc main;
-
-    public RoleListener() {
-        main = MarvelUhc.instance;
-    }
-
+    // 1. Le "Facteur" pour les pouvoirs (Clic Droit)
     @EventHandler(priority = EventPriority.HIGH)
-    public void onRightClick (PlayerInteractEvent event)
-    {
+    public void onRightClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-            if(player.getItemInHand().isSimilar(main.items.roleItems.Item_IronMan_Buff)){
-                //Lancer le menu de configuration
-                player.setVelocity(new Vector(0,20,0));
-                main.GetData(player).canGlide = true;
-                main.GetData(player).takeFallDamage = false;
+        Action action = event.getAction();
+        ItemStack item = event.getItem();
+
+        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
+            if (item != null) {
+                PlayerData data = MarvelUhc.instance.GetData(player);
+                if (data != null && data.role != null) {
+                    // On transmet le clic à la classe du rôle
+                    data.role.onRightClickItem(player, item);
+                }
             }
         }
     }
 
+    // 2. Gestion du planage (Gliding) pour des pouvoirs comme Iron Man
     @EventHandler
-    public void onMovement(PlayerMoveEvent event)
-    {
+    public void onMovement(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         PlayerData data = MarvelUhc.instance.GetData(player);
-        if(MarvelUhc.version >=9 && event.getTo().getY() < event.getFrom().getY() && data.canGlide)
-        {
+
+        // Si le joueur est en train de tomber et qu'il est autorisé à planer
+        if (data != null && data.canGlide && event.getTo().getY() < event.getFrom().getY()) {
             player.setGliding(true);
-            data.canGlide = false;
+            data.canGlide = false; // On désactive pour ne pas spammer
+        }
+    }
+
+    // 3. Empêcher le planage si on touche le sol (ex-RoleListener9)
+    @EventHandler
+    public void onEntityToggleGlide(EntityToggleGlideEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            if (!player.isOnGround() && !event.isGliding()) {
+                // Permet de forcer l'arrêt du planage ou le gérer custom
+                // (Garde cette logique si tu l'avais mise pour éviter les bugs visuels Elytra)
+                event.setCancelled(true);
+            }
         }
     }
 }

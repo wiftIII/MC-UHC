@@ -1,81 +1,67 @@
 package org.marvel_uhc.listeners;
 
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.marvel_uhc.MarvelUhc;
+import org.marvel_uhc.State;
 
-import java.util.logging.Level;
-
-public class ConnexionListener implements Listener
-{
+public class ConnexionListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onJoin(PlayerJoinEvent event)
-    {
+    public void onJoin(PlayerJoinEvent event) {
         MarvelUhc main = MarvelUhc.instance;
         Player p = event.getPlayer();
 
+        // 1. On crée les données du joueur (PlayerData)
         main.AddPlayer(p);
-        /*for (org.bukkit.entity.Player op : Bukkit.getOnlinePlayers()) {
-            Tab.sendTablist(op, main, false);
-        }
 
-        if(main.contains(main.Ingame, p))
-            main.Connected.add(main.findPlayer(p));
-        else {
-            Player player = new Player(p, main);
-            main.Connected.add(player);
-        }
+        // 2. Comportement selon l'état de la partie
+        if (main.isState(State.CONFIG)) {
+            // Avant le lancement : on remet le joueur à zéro
+            event.setJoinMessage("§a[UHC] §b" + p.getName() + " vient de se connecter ! §a(" + Bukkit.getOnlinePlayers().size() + "/" + main.configuration.maxPlayer + ")");
 
-        // Check du moment de la connexion
-        if(main.isState(State.CONFIG)) {
-            event.setJoinMessage("§a[UHC] §b"+ p.getName()+" vient de se connecter ! §a(" + main.Connected.size() + "/" + main.maxPlayer + ")");
-            p.setGameMode(GameMode.ADVENTURE);
-            p.setMaxHealth(20); // Cas du LGB
-            p.setHealth(20); // 20 = full life
-            p.setFoodLevel(20); // 20 = full food
-            p.setLevel(0); p.setExp(0);
+            p.setGameMode(GameMode.ADVENTURE); // Ou SURVIVAL selon ton lobby
+            p.setHealth(20.0);
+            p.setFoodLevel(20);
+            p.setLevel(0);
+            p.setExp(0);
+
+            // Nettoyage de l'inventaire
             p.getInventory().clear();
-            items_inv.clearArmor(p);
-        }else if(main.contains(main.Ingame, p))
-            event.setJoinMessage("§a[UHC] §b"+ p.getName()+" vient de se reconnecter !");
-        else
-            event.setJoinMessage("");
+            p.getInventory().setArmorContents(null);
 
-        //**********************************************************************
-        // Scoreboard
+            // Optionnel : donner l'item de configuration si le joueur est OP (Host)
+            if (p.isOp()) {
+                p.getInventory().setItem(4, main.items.hostItems.Item_Config);
+            }
 
-        Scoreboard sb = new Scoreboard(p);
-        sb.sendLine();
-        sb.set();
-        main.updateScoreBoard();*/
+        } else {
+            // Si la partie a déjà commencé (reconnexion en cours de jeu)
+            event.setJoinMessage("§a[UHC] §b" + p.getName() + " vient de se reconnecter !");
+        }
 
+        /* * Note : La gestion du Tab et du Scoreboard a été retirée pour éviter les erreurs.
+         * On pourra recréer des classes propres pour ça plus tard !
+         */
     }
-
-    //***********************************************************************
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        org.bukkit.entity.Player p = event.getPlayer();
-        String name = p.getName();
-        /*for(int i = 0; i < main.Connected.size(); i++) {
-            if(main.Connected.get(i).getName() == name)
-                main.Connected.remove(i);
-        }
-        if(!main.game_started)
-            event.setQuitMessage("§a[UHC] §b"+ p.getName()+" vient de se déconnecter ! §a(" + main.Connected.size() + "/" + main.maxPlayer + ")");
-        else if(main.contains(main.Ingame, p))
-            event.setQuitMessage("§a[UHC] §b"+ p.getName()+" vient de se déconnecter ! Il peut encore se reconnecter.");
-        else
-            event.setQuitMessage("");
+        MarvelUhc main = MarvelUhc.instance; // Il manquait la déclaration de 'main' ici !
+        Player p = event.getPlayer();
 
-        //Scoreboard
-        main.updateScoreBoard();*/
+        // On gère le message de déconnexion selon l'état
+        if (main.isState(State.CONFIG)) {
+            // Note: on fait -1 car le joueur est encore compté dans getOnlinePlayers() au moment où l'event se déclenche
+            event.setQuitMessage("§a[UHC] §b" + p.getName() + " vient de se déconnecter ! §a(" + (Bukkit.getOnlinePlayers().size() - 1) + "/" + main.configuration.maxPlayer + ")");
+        } else {
+            event.setQuitMessage("§a[UHC] §b" + p.getName() + " vient de se déconnecter ! Il peut encore se reconnecter.");
+        }
     }
 }

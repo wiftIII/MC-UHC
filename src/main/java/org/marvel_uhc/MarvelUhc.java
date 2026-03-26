@@ -67,14 +67,7 @@ public final class MarvelUhc extends JavaPlugin implements Listener
         pm.registerEvents(new ConnexionListener(), this);
         pm.registerEvents(new ConfigListener(), this);
         pm.registerEvents(new DamageListener(), this);
-        if(version < 9)
-        {
-            pm.registerEvents(new RoleListener(), this);
-        }
-        else
-        {
-            pm.registerEvents(new RoleListener9(), this);
-        }
+        pm.registerEvents(new RoleListener(), this);
         pm.registerEvents(new StoneListener(), this);
 
         // Commandes :
