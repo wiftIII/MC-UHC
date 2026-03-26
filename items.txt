@@ -1,0 +1,7 @@
+character.kit.add(main.items.roleItems.Item_Protect3);
+character.kit.add(main.items.roleItems.Item_Flame1);
+character.kit.add(main.items.roleItems.Item_String);
+character.kit.add(main.items.roleItems.Item_IronMan_Buff);
+
+character.kit.add(main.items.timeStone.getItem());
+character.kit.add(main.items.roleItems.Item_EnderPearl);
