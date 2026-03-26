@@ -18,6 +18,8 @@ import java.util.List;
 public class IronMan extends Role {
 
     private final String ITEM_POWER_NAME = "§c§lPropulseurs";
+    private final int BOND_COULDOWN = 60;
+    private final int PLANAGE_COULDOWN = 60;
 
     public IronMan() {
         super("Iron Man", Camp.AVENGERS, "§6");
@@ -32,8 +34,8 @@ public class IronMan extends Role {
                 "§e§lPouvoirs :",
                 "§8- §7Vous connaissez un tiers de l'équipe des Avengers.",
                 "§8- §7Avec votre Nether Star :",
-                "  §8▶ §eClic Droit : §7Vous fait faire un bond de 20 blocs sans dégâts de chute.",
-                "  §8▶ §eClic Gauche : §7Active/Désactive le vol plané."
+                "  §8▶ §eClic Droit : §7Vous fait faire un bond de 20 blocs sans dégâts de chute toutes les " + BOND_COULDOWN + " secondes.",
+                "  §8▶ §eClic Gauche : §7Active/Désactive le vol plané toutes les" + PLANAGE_COULDOWN + " secondes."
         );
     }
 
@@ -86,18 +88,20 @@ public class IronMan extends Role {
     public void onRightClickItem(Player player, ItemStack item) {
         if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(ITEM_POWER_NAME)) {
 
-            // Logique du bond de 20 blocs
-            Vector direction = player.getLocation().getDirection();
-            direction.multiply(2.5).setY(1.5); // Ajuste ces valeurs si le saut est trop fort ou trop faible
-            player.setVelocity(direction);
+            if (checkAndApplyCooldown(player, "Propulsion", BOND_COULDOWN)) {
 
-            // Annulation des dégâts de chute
-            PlayerData data = MarvelUhc.instance.GetData(player);
-            if (data != null) {
-                data.takeFallDamage = false;
+                // Logique du bond de 20 blocs
+                Vector direction = player.getLocation().getDirection();
+                direction.multiply(2.5).setY(1.5);
+                player.setVelocity(direction);
+
+                PlayerData data = MarvelUhc.instance.GetData(player);
+                if (data != null) {
+                    data.takeFallDamage = false;
+                }
+
+                player.sendMessage("§6[Iron Man] §ePropulsion !");
             }
-
-            player.sendMessage("§6[Iron Man] §ePropulsion !");
         }
     }
 
@@ -105,18 +109,21 @@ public class IronMan extends Role {
     public void onLeftClickItem(Player player, ItemStack item) {
         if (item.hasItemMeta() && item.getItemMeta().getDisplayName().equals(ITEM_POWER_NAME)) {
 
-            PlayerData data = MarvelUhc.instance.GetData(player);
-            if (data != null) {
-                // On inverse la valeur de canGlide (Si true devient false, si false devient true)
-                data.canGlide = !data.canGlide;
+            if (checkAndApplyCooldown(player, "Activation Planage", PLANAGE_COULDOWN)) {
 
-                if (data.canGlide) {
-                    player.sendMessage("§6[Iron Man] §aMode planage activé. (Tombez pour planer)");
-                } else {
-                    player.sendMessage("§6[Iron Man] §cMode planage désactivé.");
-                    player.setGliding(false); // Force l'arrêt immédiat si on est en l'air
+                PlayerData data = MarvelUhc.instance.GetData(player);
+                if (data != null) {
+                    data.canGlide = !data.canGlide;
+
+                    if (data.canGlide) {
+                        player.sendMessage("§6[Iron Man] §aMode planage activé. (Tombez pour planer)");
+                    } else {
+                        player.sendMessage("§6[Iron Man] §cMode planage désactivé.");
+                        player.setGliding(false);
+                    }
                 }
             }
         }
     }
+
 }

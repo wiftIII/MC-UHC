@@ -4,7 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Role {
     private final String name;
@@ -51,4 +53,32 @@ public abstract class Role {
     // Événement lié à l'utilisation des pouvoirs
     public void onRightClickItem(Player player, ItemStack item) {}
     public void onLeftClickItem(Player player, ItemStack item) {}
+
+    // --- Système de Cooldowns ---
+    private final Map<String, Long> cooldowns = new HashMap<>();
+
+    /**
+     * Vérifie si le pouvoir est prêt, et si oui, applique le cooldown.
+     * @param player Le joueur qui utilise le pouvoir
+     * @param powerName Le nom du pouvoir (pour le différencier s'il en a plusieurs)
+     * @param seconds Le temps d'attente en secondes
+     * @return true si le pouvoir peut être lancé, false s'il est en rechargement
+     */
+    protected boolean checkAndApplyCooldown(Player player, String powerName, int seconds) {
+        long currentTime = System.currentTimeMillis();
+
+        if (cooldowns.containsKey(powerName)) {
+            long expireTime = cooldowns.get(powerName);
+            if (currentTime < expireTime) {
+                // Le cooldown n'est pas terminé
+                long timeLeft = (expireTime - currentTime) / 1000;
+                player.sendMessage("§c[!] §7Le pouvoir §e" + powerName + " §7est en rechargement. (Patientez §c" + timeLeft + "s§7)");
+                return false;
+            }
+        }
+
+        // Le pouvoir est prêt, on enregistre le nouveau temps d'attente
+        cooldowns.put(powerName, currentTime + (seconds * 1000L));
+        return true;
+    }
 }
