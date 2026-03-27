@@ -18,8 +18,8 @@ import java.util.List;
 public class IronMan extends Role {
 
     private final String ITEM_POWER_NAME = "§c§lPropulseurs";
-    private final int BOND_COULDOWN = 60;
-    private final int PLANAGE_COULDOWN = 60;
+    private final int BOND_COULDOWN = 60; // 60 secondes
+    private final int PLANAGE_COULDOWN = 60; // 60 secondes
 
     public IronMan() {
         super("Iron Man", Camp.AVENGERS, "§6");
@@ -35,7 +35,7 @@ public class IronMan extends Role {
                 "§8- §7Vous connaissez un tiers de l'équipe des Avengers.",
                 "§8- §7Avec votre Nether Star :",
                 "  §8▶ §eClic Droit : §7Vous fait faire un bond de 20 blocs sans dégâts de chute toutes les " + BOND_COULDOWN + " secondes.",
-                "  §8▶ §eClic Gauche : §7Active/Désactive le vol plané toutes les" + PLANAGE_COULDOWN + " secondes."
+                "  §8▶ §eClic Gauche : §7Active/Désactive le vol plané toutes les " + PLANAGE_COULDOWN + " secondes."
         );
     }
 

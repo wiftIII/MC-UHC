@@ -12,3 +12,5 @@ commands:
     description: Donne le role Iron Man
   dr_strange:
     description: Donne le role Dr Strange
+  captain_america:
+    description: Debug Captain America

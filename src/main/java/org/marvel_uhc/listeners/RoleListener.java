@@ -14,25 +14,7 @@ import org.marvel_uhc.PlayerData;
 
 public class RoleListener implements Listener {
 
-    // 1. Le "Facteur" pour les pouvoirs (Clic Droit)
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onRightClick(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        Action action = event.getAction();
-        ItemStack item = event.getItem();
-
-        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            if (item != null) {
-                PlayerData data = MarvelUhc.instance.GetData(player);
-                if (data != null && data.role != null) {
-                    // On transmet le clic à la classe du rôle
-                    data.role.onRightClickItem(player, item);
-                }
-            }
-        }
-    }
-
-    // 1. Le "Facteur" pour les pouvoirs (Clic Gauche)
+    // 1. Le "Facteur" pour les pouvoirs (Clic Gauche ET Droit)
     @EventHandler(priority = EventPriority.HIGH)
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();

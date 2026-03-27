@@ -1,7 +1,7 @@
 package org.marvel_uhc.roles;
 
 // Il faudra importer les classes au fur et à mesure qu'on les crée
-import org.marvel_uhc.roles.avengers.IronMan;
+import org.marvel_uhc.roles.avengers.*;
 
 public class RoleManager {
 
@@ -20,14 +20,14 @@ public class RoleManager {
     // On remplace GetRole() pour qu'elle renvoie une nouvelle instance de notre classe objet
     public static Role getRoleInstance(ROLES role) {
         switch (role) {
-            case IronMan:
-                return new IronMan(); // On crée le "vrai" Iron Man avec ses pouvoirs
+            case IronMan: return new IronMan(); // On crée le "vrai" Iron Man avec ses pouvoirs
 
             // Pour l'instant, on laisse les autres commentés ou on renvoie null
             // car les classes n'existent pas encore. On les ajoutera ici à l'Étape 2.
 
-            /*
             case CaptainAmerica: return new CaptainAmerica();
+
+            /*
             case SpiderMan: return new SpiderMan();
             */
 

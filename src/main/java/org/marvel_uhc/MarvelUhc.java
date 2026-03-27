@@ -90,7 +90,7 @@ public final class MarvelUhc extends JavaPlugin implements Listener
         RoleCommands roleCommands = new RoleCommands();
 
         getCommand("iron_man").setExecutor(roleCommands);
-
+        getCommand("captain_america").setExecutor(roleCommands);
         // Tu peux laisser dr_strange, ça ne plantera pas tant que
         // l'intérieur de la commande dans RoleCommands est géré ou commenté !
         getCommand("dr_strange").setExecutor(roleCommands);

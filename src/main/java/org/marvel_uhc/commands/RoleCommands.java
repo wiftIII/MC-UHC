@@ -31,6 +31,16 @@ public class RoleCommands implements CommandExecutor {
                     return true;
                 }
 
+                if (command.getName().equalsIgnoreCase("captain_america")) {
+                    player.getInventory().clear();
+                    Role capRole = RoleManager.getRoleInstance(RoleManager.ROLES.CaptainAmerica);
+                    if (capRole != null) {
+                        main.SetRole(player, capRole);
+                        player.sendMessage("§a[Debug] Rôle Captain America forcé.");
+                    }
+                    return true;
+                }
+
                 // Commenté en attendant qu'on crée la classe DrStrange
                 /*
                 if (command.getName().equalsIgnoreCase("dr_strange")) {
