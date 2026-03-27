@@ -20,16 +20,10 @@ public class RoleManager {
     // On remplace GetRole() pour qu'elle renvoie une nouvelle instance de notre classe objet
     public static Role getRoleInstance(ROLES role) {
         switch (role) {
-            case IronMan: return new IronMan(); // On crée le "vrai" Iron Man avec ses pouvoirs
-
-            // Pour l'instant, on laisse les autres commentés ou on renvoie null
-            // car les classes n'existent pas encore. On les ajoutera ici à l'Étape 2.
-
+            case IronMan: return new IronMan();
             case CaptainAmerica: return new CaptainAmerica();
-
-            /*
-            case SpiderMan: return new SpiderMan();
-            */
+            case NickFury: return new NickFury();
+            case DrStrange: return new DrStrange();
 
             default:
                 return null; // Sécurité en attendant de créer toutes les classes

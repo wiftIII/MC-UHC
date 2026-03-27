@@ -41,8 +41,16 @@ public class RoleCommands implements CommandExecutor {
                     return true;
                 }
 
-                // Commenté en attendant qu'on crée la classe DrStrange
-                /*
+                if (command.getName().equalsIgnoreCase("nick_fury")) {
+                    player.getInventory().clear();
+                    Role furyRole = RoleManager.getRoleInstance(RoleManager.ROLES.NickFury);
+                    if (furyRole != null) {
+                        main.SetRole(player, furyRole);
+                        player.sendMessage("§a[Debug] Rôle Nick Fury forcé.");
+                    }
+                    return true;
+                }
+
                 if (command.getName().equalsIgnoreCase("dr_strange")) {
                     player.getInventory().clear();
                     Role strangeRole = RoleManager.getRoleInstance(RoleManager.ROLES.DrStrange);
@@ -52,7 +60,7 @@ public class RoleCommands implements CommandExecutor {
                     }
                     return true;
                 }
-                */
+
             }
 
             // --- FUTURES COMMANDES DE POUVOIRS ICI (Ex: /shield, /web) ---
