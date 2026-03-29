@@ -1,53 +1,44 @@
 package org.marvel_uhc.commands;
 
+import dev.jorel.commandapi.CommandAPICommand;
+import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.marvel_uhc.MarvelUhc;
 import org.marvel_uhc.State;
 
-public class HostCommands implements CommandExecutor {
+public class HostCommands {
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        MarvelUhc main = MarvelUhc.instance; // Plus propre que de faire une méthode
+    public HostCommands() {
+        MarvelUhc main = MarvelUhc.instance;
 
-        if (commandSender instanceof Player player) {
-
-            // Commande : /host
-            if (command.getName().equalsIgnoreCase("host")) {
-                if (main.isState(State.CONFIG)) {
-                    if (player.getInventory().contains(main.items.hostItems.Item_Config)) {
-                        player.sendMessage("§c[Erreur] Vous avez déjà reçu votre item de configuration !");
+        // Commande : /host
+        new CommandAPICommand("host")
+                .executesPlayer((player, args) -> {
+                    if (main.isState(State.CONFIG)) {
+                        if (player.getInventory().contains(main.items.hostItems.Item_Config)) {
+                            player.sendMessage("§c[Erreur] Vous avez déjà reçu votre item de configuration !");
+                        } else {
+                            player.getInventory().setItem(0, main.items.hostItems.Item_Config);
+                            player.sendMessage("§a[UHC] Vous avez reçu votre item de configuration !");
+                        }
                     } else {
-                        player.getInventory().setItem(0, main.items.hostItems.Item_Config);
-                        player.sendMessage("§a[UHC] Vous avez reçu votre item de configuration !");
+                        player.sendMessage("§c[Erreur] La partie a démarré !");
                     }
-                } else {
-                    player.sendMessage("§c[Erreur] La partie a démarré !");
-                }
-                return true;
-            }
+                })
+                .register();
 
-            // Commande : /say
-            if (command.getName().equalsIgnoreCase("say")) {
-                if (strings.length == 0) {
-                    player.sendMessage("§c[Erreur] La commande est §6/say (message) §9!");
-                } else {
-                    StringBuilder message = new StringBuilder("§6[Host] " + player.getName() + " : §9");
-                    for (String m : strings) {
-                        message.append(m).append(" ");
-                    }
+        // Commande : /say <message>
+        new CommandAPICommand("say")
+                // On demande obligatoirement un texte (GreedyString capte toute la phrase)
+                .withArguments(new GreedyStringArgument("message"))
+                .executesPlayer((player, args) -> {
+                    String messageText = (String) args.get("message");
+
+                    String message = "§6[Host] " + player.getName() + " : §9" + messageText;
                     Bukkit.broadcastMessage("§9§m----------------------------------------------");
-                    Bukkit.broadcastMessage(message.toString());
+                    Bukkit.broadcastMessage(message);
                     Bukkit.broadcastMessage("§9§m----------------------------------------------");
-                }
-                return true;
-            }
-        }
-        return false;
+                })
+                .register();
     }
 }

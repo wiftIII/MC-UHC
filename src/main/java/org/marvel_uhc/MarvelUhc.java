@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPIBukkitConfig;
 
 public final class MarvelUhc extends JavaPlugin implements Listener
 {
@@ -35,7 +37,6 @@ public final class MarvelUhc extends JavaPlugin implements Listener
     public RoleManager roles;
 
     public GameConfiguration configuration;
-
 
     @Override
     public void onEnable()
@@ -71,9 +72,7 @@ public final class MarvelUhc extends JavaPlugin implements Listener
         pm.registerEvents(new StoneListener(), this);
 
         // Commandes :
-        HostCommands hostCommands = new HostCommands();
-        getCommand("host").setExecutor(hostCommands);
-        getCommand("say").setExecutor(hostCommands);
+        new HostCommands();
 
         if(DEBUG_MODE)
         {
@@ -84,16 +83,12 @@ public final class MarvelUhc extends JavaPlugin implements Listener
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        CommandAPI.onDisable();
     }
 
     private void InitDebug() {
-        RoleCommands roleCommands = new RoleCommands();
-
-        getCommand("iron_man").setExecutor(roleCommands);
-        getCommand("captain_america").setExecutor(roleCommands);
-        getCommand("nick_fury").setExecutor(roleCommands);
-        getCommand("dr_strange").setExecutor(roleCommands);
-        getCommand("thor").setExecutor(roleCommands);
+        //commandes de roles
+        new RoleCommands();
     }
     //**********************************************************************
 

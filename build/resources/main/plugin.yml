@@ -2,19 +2,4 @@ name: Marvel_UHC
 version: '1.0-SNAPSHOT'
 main: org.marvel_uhc.MarvelUhc
 api-version: '1.21'
-commands:
-  host:
-    description: Commande pour récupérer l'item de configuration
-  say:
-    description: Commande pour parler en tant que host
-  #DEBUG/TEST commands
-  iron_man:
-    description: Donne le role Iron Man
-  captain_america:
-    description: Debug Captain America
-  nick_fury:
-    description: Debug Nick Fury
-  dr_strange:
-    description: Debug Dr Strange
-  thor:
-    description: Debug Thor
+depend: [CommandAPI]

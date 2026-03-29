@@ -1,81 +1,71 @@
 package org.marvel_uhc.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import dev.jorel.commandapi.CommandAPICommand;
 import org.marvel_uhc.MarvelUhc;
-import org.marvel_uhc.roles.RoleManager;
 import org.marvel_uhc.roles.Role;
+import org.marvel_uhc.roles.RoleManager;
 
-public class RoleCommands implements CommandExecutor {
+public class RoleCommands {
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        MarvelUhc main = MarvelUhc.instance;
+    public RoleCommands() {
 
-        if (commandSender instanceof Player player) {
+        // ========================================================================
+        // 1. COMMANDE DE DEBUG : /mc_role_debug <role>
+        // ========================================================================
+        CommandAPICommand debugCommand = new CommandAPICommand("mc_role_debug")
+                .withPermission("op") // Seuls les opérateurs peuvent voir/utiliser cette commande
+                .withShortDescription("Permet de se donner un rôle pour les tests");
 
-            // --- COMMANDES DE DEBUG (Actives uniquement en DEBUG_MODE) ---
-            if (MarvelUhc.DEBUG_MODE) {
+        // On ajoute nos sous-commandes (ex: /mc_role_debug iron_man)
+        debugCommand.withSubcommand(createDebugSubCommand("iron_man", RoleManager.ROLES.IronMan));
+        debugCommand.withSubcommand(createDebugSubCommand("captain_america", RoleManager.ROLES.CaptainAmerica));
+        debugCommand.withSubcommand(createDebugSubCommand("nick_fury", RoleManager.ROLES.NickFury));
+        debugCommand.withSubcommand(createDebugSubCommand("dr_strange", RoleManager.ROLES.DrStrange));
+        debugCommand.withSubcommand(createDebugSubCommand("thor", RoleManager.ROLES.Thor));
 
-                if (command.getName().equalsIgnoreCase("iron_man")) {
-                    player.getInventory().clear();
-                    // On utilise la nouvelle méthode getRoleInstance !
-                    Role ironManRole = RoleManager.getRoleInstance(RoleManager.ROLES.IronMan);
-                    if (ironManRole != null) {
-                        main.SetRole(player, ironManRole);
-                        player.sendMessage("§a[Debug] Rôle Iron Man forcé.");
+        // On enregistre la commande principale et toutes ses sous-commandes d'un coup !
+        debugCommand.register();
+
+
+        // ========================================================================
+        // 2. COMMANDE DES JOUEURS : /mc <pouvoir>
+        // ========================================================================
+        CommandAPICommand mcCommand = new CommandAPICommand("mc")
+                .withShortDescription("Commandes liées à votre rôle Marvel UHC")
+                .executesPlayer((player, args) -> {
+                    // Si le joueur tape juste /mc sans rien derrière
+                    player.sendMessage("§cUtilisation: /mc <pouvoir>");
+                });
+
+        // Plus tard, on viendra ajouter ici :
+        // mcCommand.withSubcommand(new CommandAPICommand("say")...);
+        // mcCommand.withSubcommand(new CommandAPICommand("tp")...);
+
+        mcCommand.register();
+    }
+
+    /**
+     * Méthode utilitaire pour générer les sous-commandes de debug proprement
+     */
+    private CommandAPICommand createDebugSubCommand(String name, RoleManager.ROLES roleEnum) {
+        return new CommandAPICommand(name)
+                .executesPlayer((player, args) -> {
+
+                    // Sécurité : ne fonctionne qu'en DEBUG_MODE
+                    if (!MarvelUhc.DEBUG_MODE) {
+                        player.sendMessage("§cLe mode debug est désactivé.");
+                        return;
                     }
-                    return true;
-                }
 
-                if (command.getName().equalsIgnoreCase("captain_america")) {
                     player.getInventory().clear();
-                    Role capRole = RoleManager.getRoleInstance(RoleManager.ROLES.CaptainAmerica);
-                    if (capRole != null) {
-                        main.SetRole(player, capRole);
-                        player.sendMessage("§a[Debug] Rôle Captain America forcé.");
+                    Role role = RoleManager.getRoleInstance(roleEnum);
+
+                    if (role != null) {
+                        MarvelUhc.instance.SetRole(player, role);
+                        player.sendMessage("§a[Debug] Rôle " + role.getName() + " forcé.");
+                    } else {
+                        player.sendMessage("§c[Erreur] Ce rôle n'est pas encore développé !");
                     }
-                    return true;
-                }
-
-                if (command.getName().equalsIgnoreCase("nick_fury")) {
-                    player.getInventory().clear();
-                    Role furyRole = RoleManager.getRoleInstance(RoleManager.ROLES.NickFury);
-                    if (furyRole != null) {
-                        main.SetRole(player, furyRole);
-                        player.sendMessage("§a[Debug] Rôle Nick Fury forcé.");
-                    }
-                    return true;
-                }
-
-                if (command.getName().equalsIgnoreCase("dr_strange")) {
-                    player.getInventory().clear();
-                    Role strangeRole = RoleManager.getRoleInstance(RoleManager.ROLES.DrStrange);
-                    if (strangeRole != null) {
-                        main.SetRole(player, strangeRole);
-                        player.sendMessage("§a[Debug] Rôle Dr Strange forcé.");
-                    }
-                    return true;
-                }
-
-                if (command.getName().equalsIgnoreCase("thor")) {
-                    player.getInventory().clear();
-                    Role thorRole = RoleManager.getRoleInstance(RoleManager.ROLES.Thor);
-                    if (thorRole != null) {
-                        MarvelUhc.instance.SetRole(player, thorRole);
-                        player.sendMessage("§a[Debug] Rôle Thor forcé.");
-                    }
-                    return true;
-                }
-
-            }
-
-            // --- FUTURES COMMANDES DE POUVOIRS ICI (Ex: /shield, /web) ---
-
-        }
-        return true;
+                });
     }
 }
