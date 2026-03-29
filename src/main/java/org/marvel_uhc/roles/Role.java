@@ -2,11 +2,10 @@ package org.marvel_uhc.roles;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Role {
     private final String name;
@@ -36,6 +35,13 @@ public abstract class Role {
     // Les rôles peuvent "Override" (écraser) ces méthodes uniquement s'ils en ont besoin.
 
     public void onGiveRole(Player player) {
+        //suppression de tout les effets
+        Iterator<PotionEffect> iterator = player.getActivePotionEffects().iterator();
+
+        while (iterator.hasNext()) {
+            PotionEffect effect = iterator.next();
+            player.removePotionEffect(effect.getType());
+        }
         // Par défaut, on donne juste le kit au joueur
         for (ItemStack item : kit) {
             player.getInventory().addItem(item);
@@ -49,6 +55,8 @@ public abstract class Role {
     // Événements liés au combat
     public void onKill(Player killer, Player victim) {}
     public void onDeath(Player player, Player killer) {}
+    // Déclenché quand le joueur attaque un autre joueur
+    public void onAttack(Player attacker, Player victim) {}
 
     // Événement lié à l'utilisation des pouvoirs
     public void onRightClickItem(Player player, ItemStack item) {}

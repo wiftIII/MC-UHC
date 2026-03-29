@@ -93,6 +93,7 @@ public final class MarvelUhc extends JavaPlugin implements Listener
         getCommand("captain_america").setExecutor(roleCommands);
         getCommand("nick_fury").setExecutor(roleCommands);
         getCommand("dr_strange").setExecutor(roleCommands);
+        getCommand("thor").setExecutor(roleCommands);
     }
     //**********************************************************************
 

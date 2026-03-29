@@ -16,3 +16,5 @@ commands:
     description: Debug Nick Fury
   dr_strange:
     description: Debug Dr Strange
+  thor:
+    description: Debug Thor

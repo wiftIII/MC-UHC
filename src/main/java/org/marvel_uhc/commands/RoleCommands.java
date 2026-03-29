@@ -61,6 +61,16 @@ public class RoleCommands implements CommandExecutor {
                     return true;
                 }
 
+                if (command.getName().equalsIgnoreCase("thor")) {
+                    player.getInventory().clear();
+                    Role thorRole = RoleManager.getRoleInstance(RoleManager.ROLES.Thor);
+                    if (thorRole != null) {
+                        MarvelUhc.instance.SetRole(player, thorRole);
+                        player.sendMessage("§a[Debug] Rôle Thor forcé.");
+                    }
+                    return true;
+                }
+
             }
 
             // --- FUTURES COMMANDES DE POUVOIRS ICI (Ex: /shield, /web) ---

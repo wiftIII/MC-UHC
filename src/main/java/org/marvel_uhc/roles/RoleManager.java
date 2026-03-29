@@ -24,6 +24,7 @@ public class RoleManager {
             case CaptainAmerica: return new CaptainAmerica();
             case NickFury: return new NickFury();
             case DrStrange: return new DrStrange();
+            case Thor: return new Thor();
 
             default:
                 return null; // Sécurité en attendant de créer toutes les classes

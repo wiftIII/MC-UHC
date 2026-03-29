@@ -11,6 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.marvel_uhc.MarvelUhc;
 import org.marvel_uhc.PlayerData;
 import org.marvel_uhc.State;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class DamageListener implements Listener {
 
@@ -70,6 +71,19 @@ public class DamageListener implements Listener {
             playerData.takeFallDamage = true; // On reset après la chute
             event.setCancelled(true);
             return;
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerAttack(EntityDamageByEntityEvent event) {
+        // On vérifie que l'attaquant et la victime sont bien des joueurs
+        if (event.getDamager() instanceof Player attacker && event.getEntity() instanceof Player victim) {
+
+            PlayerData attackerData = main.GetData(attacker);
+            if (attackerData != null && attackerData.role != null) {
+                // On prévient le rôle qu'il vient de taper quelqu'un !
+                attackerData.role.onAttack(attacker, victim);
+            }
         }
     }
 }

@@ -18,10 +18,16 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven {
+        name = "codemc-repo"
+        url = "https://repo.codemc.org/repository/maven-public/"
+    }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    // CommandAPI
+    compileOnly("dev.jorel:commandapi-bukkit-core:11.1.0")
 }
 
 def targetJavaVersion = 17
