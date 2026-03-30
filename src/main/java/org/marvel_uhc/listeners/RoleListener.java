@@ -13,6 +13,9 @@ import org.marvel_uhc.MarvelUhc;
 import org.marvel_uhc.PlayerData;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.entity.Arrow;
 
 public class RoleListener implements Listener {
 
@@ -77,6 +80,26 @@ public class RoleListener implements Listener {
             if (data != null && data.role != null) {
                 // On transmet l'info au rôle
                 data.role.onRightClickEntity(player, event.getRightClicked(), item);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBowShoot(EntityShootBowEvent event) {
+        if (event.getEntity() instanceof Player player && event.getProjectile() instanceof Arrow arrow) {
+            PlayerData data = MarvelUhc.instance.GetData(player);
+            if (data != null && data.role != null) {
+                data.role.onBowShoot(player, arrow);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onProjectileHit(ProjectileHitEvent event) {
+        if (event.getEntity() instanceof Arrow arrow && arrow.getShooter() instanceof Player player) {
+            PlayerData data = MarvelUhc.instance.GetData(player);
+            if (data != null && data.role != null) {
+                data.role.onArrowHit(player, arrow);
             }
         }
     }

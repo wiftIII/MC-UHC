@@ -57,6 +57,14 @@ public abstract class Role {
     public void onDeath(Player player, Player killer) {}
     // Déclenché quand le joueur attaque un autre joueur
     public void onAttack(Player attacker, Player victim) {}
+    // Déclenché quand le joueur subit des dégâts d'un autre joueur
+    public void onDamageReceived(Player victim, Player attacker, double damage, org.bukkit.event.entity.EntityDamageByEntityEvent event) {}
+
+    // Déclenché quand le joueur tire à l'arc
+    public void onBowShoot(Player player, org.bukkit.entity.Arrow arrow) {}
+
+    // Déclenché quand une de ses flèches touche le sol ou une entité
+    public void onArrowHit(Player player, org.bukkit.entity.Arrow arrow) {}
 
     // Événement lié à l'utilisation des pouvoirs
     public void onRightClickItem(Player player, ItemStack item) {}

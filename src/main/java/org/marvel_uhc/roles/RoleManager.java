@@ -27,6 +27,12 @@ public class RoleManager {
             case Thor: return new Thor();
             case Hulk: return new Hulk();
             case SpiderMan: return new SpiderMan();
+            case BlackPanther: return new BlackPanther();
+            case BlackWidow: return new BlackWidow();
+            case CaptainMarvel: return new CaptainMarvel();
+            case Hawkeye: return new Hawkeye();
+            case Vision: return new Vision();
+            case Wanda: return new Wanda();
 
             default:
                 return null; // Sécurité en attendant de créer toutes les classes

@@ -76,13 +76,19 @@ public class DamageListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        // On vérifie que l'attaquant et la victime sont bien des joueurs
         if (event.getDamager() instanceof Player attacker && event.getEntity() instanceof Player victim) {
 
+            // 1. On prévient l'attaquant (Pour Thor, etc.)
             PlayerData attackerData = main.GetData(attacker);
             if (attackerData != null && attackerData.role != null) {
-                // On prévient le rôle qu'il vient de taper quelqu'un !
                 attackerData.role.onAttack(attacker, victim);
+            }
+
+            // 2. On prévient la victime (Pour Black Panther, etc.)
+            PlayerData victimData = main.GetData(victim);
+            if (victimData != null && victimData.role != null) {
+                // On lui passe l'événement complet au cas où un rôle aurait besoin d'annuler le coup !
+                victimData.role.onDamageReceived(victim, attacker, event.getDamage(), event);
             }
         }
     }
