@@ -11,6 +11,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.marvel_uhc.MarvelUhc;
 import org.marvel_uhc.PlayerData;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class RoleListener implements Listener {
 
@@ -58,6 +60,23 @@ public class RoleListener implements Listener {
                 // Permet de forcer l'arrêt du planage ou le gérer custom
                 // (Garde cette logique si tu l'avais mise pour éviter les bugs visuels Elytra)
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityInteract(PlayerInteractEntityEvent event) {
+        // On évite que l'événement se déclenche deux fois (une fois pour chaque main)
+        if (event.getHand() != EquipmentSlot.HAND) return;
+
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+
+        if (item != null && item.getType() != org.bukkit.Material.AIR) {
+            PlayerData data = MarvelUhc.instance.GetData(player);
+            if (data != null && data.role != null) {
+                // On transmet l'info au rôle
+                data.role.onRightClickEntity(player, event.getRightClicked(), item);
             }
         }
     }

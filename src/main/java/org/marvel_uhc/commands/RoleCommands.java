@@ -22,6 +22,8 @@ public class RoleCommands {
         debugCommand.withSubcommand(createDebugSubCommand("nick_fury", RoleManager.ROLES.NickFury));
         debugCommand.withSubcommand(createDebugSubCommand("dr_strange", RoleManager.ROLES.DrStrange));
         debugCommand.withSubcommand(createDebugSubCommand("thor", RoleManager.ROLES.Thor));
+        debugCommand.withSubcommand(createDebugSubCommand("hulk", RoleManager.ROLES.Hulk));
+        debugCommand.withSubcommand(createDebugSubCommand("spider_man", RoleManager.ROLES.SpiderMan));
 
         // On enregistre la commande principale et toutes ses sous-commandes d'un coup !
         debugCommand.register();

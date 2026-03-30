@@ -62,6 +62,9 @@ public abstract class Role {
     public void onRightClickItem(Player player, ItemStack item) {}
     public void onLeftClickItem(Player player, ItemStack item) {}
 
+    // Déclenché quand le joueur fait un clic droit sur une entité (un autre joueur)
+    public void onRightClickEntity(Player player, org.bukkit.entity.Entity clickedEntity, ItemStack item) {}
+
     // --- Système de Cooldowns ---
     private final Map<String, Long> cooldowns = new HashMap<>();
 
