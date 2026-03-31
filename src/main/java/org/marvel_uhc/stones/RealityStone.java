@@ -1,17 +1,14 @@
 package org.marvel_uhc.stones;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class RealityStone extends Stone {
 
-    private static final long INVISIBILITY_DURATION = 10 * 60 * 20; // 10 minutes
-    private boolean powerUsed = false;
+    private final int COOLDOWN = 600; // 10 minutes en secondes
+    private final int DURATION = 10 * 60 * 20; // 10 minutes en ticks (20 ticks = 1 seconde)
 
     public RealityStone(ItemStack item) {
         super(item);
@@ -19,32 +16,17 @@ public class RealityStone extends Stone {
 
     @Override
     public void onRightClick(Player player) {
-        if (powerUsed) {
-            player.sendMessage("The power of the Reality Stone has already been used.");
-            return;
+
+        // On vérifie le cooldown propre à la pierre
+        if (checkAndApplyCooldown(player, COOLDOWN)) {
+
+            // Invisibilité (sans particules : false, false)
+            player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, DURATION, 0, false, false));
+
+            // Absorption (4 cœurs = niveau 1, car niveau 0 = 2 cœurs. Sans particules)
+            player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, DURATION, 1, false, false));
+
+            player.sendMessage("§c[Pierre de la Réalité] §aLa réalité s'altère... Vous êtes invisible et renforcé pour 10 minutes.");
         }
-
-        // Apply the invisibility effect for 10 minutes
-        player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, (int) INVISIBILITY_DURATION, 0));
-        player.sendMessage("You are now invisible for 10 minutes thanks to the Reality Stone.");
-        powerUsed = true;
-
-        // Define a task to notify when the effect is complete
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                player.sendMessage("Your invisibility thanks to the Reality Stone has expired.");
-            }
-        }.runTaskLater(Bukkit.getPluginManager().getPlugin("MarvelUhc"), INVISIBILITY_DURATION);
     }
-
-    @Override
-    public void onLeftClick(Player player) {
-        player.sendMessage("§cNo left-click action for the Mind Stone.");
-    }
-
-    @Override
-    public void onPlayerDeath(PlayerDeathEvent event) {
-    }
-
 }

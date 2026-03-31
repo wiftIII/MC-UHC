@@ -1,14 +1,11 @@
 package org.marvel_uhc.stones;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.UUID;
 
 public class PowerStone extends Stone {
 
-    private static final long COOLDOWN_TIME = 3 * 60 * 1000; // 3 minutes
+    private final int COOLDOWN = 300; // 5 minutes en secondes
 
     public PowerStone(ItemStack item) {
         super(item);
@@ -16,25 +13,18 @@ public class PowerStone extends Stone {
 
     @Override
     public void onRightClick(Player player) {
-        Player target = getTargetPlayer(player);
+        Player target = getTargetPlayer(player, 20);
 
-        if (isOnCooldown(player, COOLDOWN_TIME)) {
-            return;
+        if (target != null) {
+            if (checkAndApplyCooldown(player, COOLDOWN)) {
+                // 8.0 dégâts = 4 cœurs
+                target.damage(8.0, player);
+
+                player.sendMessage("§5[Pierre du Pouvoir] §7Vous avez foudroyé " + target.getName() + " !");
+                target.sendMessage("§5[!] Une force écrasante s'abat sur vous !");
+            }
+        } else {
+            player.sendMessage("§5[Pierre du Pouvoir] §cAucun joueur ciblé à portée.");
         }
-
-        // Inflict 4 hearts of damage on the targeted player
-        target.damage(8.0); // 4 hearts = 8 hit points
-        player.sendMessage("You have inflicted 4❤ damage to " + target.getName());
-
-        startCooldown(player, COOLDOWN_TIME);
-    }
-
-    @Override
-    public void onLeftClick(Player player) {
-        player.sendMessage("§cNo left-click action for the Mind Stone.");
-    }
-
-    @Override
-    public void onPlayerDeath(PlayerDeathEvent event) {
     }
 }

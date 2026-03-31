@@ -45,13 +45,16 @@ public class Vision extends Role {
     protected void setupKit() {
         // On récupère la Pierre de la Réalité depuis l'ItemManager
         if (MarvelUhc.instance.items != null && MarvelUhc.instance.items.realityStone != null) {
-            this.kit.add(MarvelUhc.instance.items.realityStone.getItem());
+            this.kit.add(MarvelUhc.instance.items.realityStone.getItem().clone());
         }
     }
 
     @Override
     public void onGiveRole(Player player) {
         super.onGiveRole(player);
+
+        // Effet permanent de Jump (Durée infinie = Integer.MAX_VALUE, Amplificateur 0 = Force 1)
+        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, 0, false, false));
 
         player.sendMessage("§8§m--------------------------------------------------");
         for (String line : getDescription()) {
@@ -62,26 +65,7 @@ public class Vision extends Role {
 
     @Override
     public void onRightClickItem(Player player, ItemStack item) {
-        // On vérifie si l'item utilisé est bien la Pierre de la Réalité
-        if (MarvelUhc.instance.items != null && MarvelUhc.instance.items.realityStone != null) {
-            ItemStack realityStone = MarvelUhc.instance.items.realityStone.getItem();
 
-            if (item.isSimilar(realityStone)) {
-                if (checkAndApplyCooldown(player, "Pierre de la Réalité", REALITY_STONE_COOLDOWN)) {
-
-                    // Invisibilité (10 min, sans particules : false, false)
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, REALITY_STONE_DURATION, 0, false, false));
-
-                    // Jump Boost (10 min, sans particules)
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, REALITY_STONE_DURATION, 1, false, false));
-
-                    // Absorption (4 cœurs = niveau 1, car niveau 0 = 2 cœurs. Sans particules)
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, REALITY_STONE_DURATION, 1, false, false));
-
-                    player.sendMessage("§6[Vision] §aVous avez altéré la réalité. Vous êtes invisible et renforcé pour 10 minutes.");
-                }
-            }
-        }
     }
 
     /**

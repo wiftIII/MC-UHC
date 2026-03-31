@@ -42,7 +42,7 @@ public class DrStrange extends Role {
 
         // 2. La Pierre du Temps (On la récupère directement de ton ItemManager !)
         if (MarvelUhc.instance.items != null && MarvelUhc.instance.items.timeStone != null) {
-            this.kit.add(MarvelUhc.instance.items.timeStone.getItem());
+            this.kit.add(MarvelUhc.instance.items.timeStone.getItem().clone());
         }
     }
 

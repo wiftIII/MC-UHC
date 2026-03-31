@@ -12,6 +12,9 @@ import org.marvel_uhc.MarvelUhc;
 import org.marvel_uhc.PlayerData;
 import org.marvel_uhc.State;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.Sound;
+import org.marvel_uhc.stones.SoulStone;
 
 public class DamageListener implements Listener {
 
@@ -21,22 +24,64 @@ public class DamageListener implements Listener {
         main = MarvelUhc.instance;
     }
 
-    // Mort d'un joueur
+    // ==========================================
+    // 1. INTERCEPTION DE LA MORT (RÉSURRECTION)
+    // ==========================================
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onFatalDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player player) {
+
+            // Si les dégâts que le joueur va prendre sont supérieurs ou égaux à sa vie restante
+            if (event.getFinalDamage() >= player.getHealth()) {
+
+                // Vérification de la Pierre de l'Âme
+                if (main.items != null && main.items.soulStone instanceof SoulStone soulStone) {
+
+                    // Si l'UUID du joueur qui va mourir est celui sauvegardé dans la pierre
+                    if (soulStone.savedPlayerId != null && soulStone.savedPlayerId.equals(player.getUniqueId())) {
+
+                        // 1. ON ANNULE LE COUP FATAL !
+                        event.setCancelled(true);
+
+                        // 2. On le soigne (il revient à 10 cœurs / 20 HP)
+                        player.setHealth(20.0);
+
+                        // 3. On vide la pierre (usage unique)
+                        soulStone.savedPlayerId = null;
+
+                        // 4. Effets visuels et sonores (comme un Totem)
+                        player.sendMessage("§6[Pierre de l'Âme] §aL'énergie de la pierre a refusé votre mort ! Vous êtes ressuscité.");
+                        player.getWorld().playSound(player.getLocation(), Sound.ITEM_TOTEM_USE, 1.0f, 1.0f);
+
+                        // On "return" pour arrêter l'exécution ici : le joueur est sauvé !
+                        return;
+                    }
+                }
+
+                // (Plus tard, on ajoutera la survie de Wanda et Deadpool ici)
+            }
+        }
+    }
+
+
+    // ==========================================
+    // 2. LA VRAIE MORT (Conséquences)
+    // ==========================================
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         Player killer = player.getKiller();
 
-        // 1. Délégation à la Pierre de l'Âme (ton code existant)
-        main.items.soulStone.onPlayerDeath(event);
+        // Plus besoin de la pierre de l'âme ici, car si le joueur arrive à cette étape,
+        // c'est que son âme n'a pas été sauvée par l'événement au-dessus !
 
-        // 2. NOUVEAU : Délégation au Rôle du joueur mort
+        // 1. Délégation au Rôle du joueur mort (ex: Prévenir Hawkeye si Black Widow meurt)
         PlayerData victimData = main.GetData(player);
         if (victimData != null && victimData.role != null) {
             victimData.role.onDeath(player, killer);
         }
 
-        // 3. NOUVEAU : Délégation au Rôle du tueur (s'il y en a un)
+        // 2. Délégation au Rôle du tueur (ex: Spiderman qui tue Docteur Octopus)
         if (killer != null) {
             PlayerData killerData = main.GetData(killer);
             if (killerData != null && killerData.role != null) {
