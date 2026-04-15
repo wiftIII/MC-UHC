@@ -121,19 +121,33 @@ public class DamageListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player attacker && event.getEntity() instanceof Player victim) {
 
-            // 1. On prévient l'attaquant (Pour Thor, etc.)
-            PlayerData attackerData = main.GetData(attacker);
-            if (attackerData != null && attackerData.role != null) {
-                attackerData.role.onAttack(attacker, victim);
+        // 1. Si la VICTIME est un joueur
+        if (event.getEntity() instanceof Player victim) {
+
+            // On vérifie si la victime doit perdre son invisibilité
+            if (main.items != null && main.items.realityStone instanceof org.marvel_uhc.stones.RealityStone realityStone) {
+                realityStone.breakInvisibility(victim);
             }
 
-            // 2. On prévient la victime (Pour Black Panther, etc.)
-            PlayerData victimData = main.GetData(victim);
-            if (victimData != null && victimData.role != null) {
-                // On lui passe l'événement complet au cas où un rôle aurait besoin d'annuler le coup !
-                victimData.role.onDamageReceived(victim, attacker, event.getDamage(), event);
+            // 2. Si l'ATTAQUANT est aussi un joueur
+            if (event.getDamager() instanceof Player attacker) {
+
+                // On vérifie si l'attaquant doit perdre son invisibilité
+                if (main.items != null && main.items.realityStone instanceof org.marvel_uhc.stones.RealityStone rStone) {
+                    rStone.breakInvisibility(attacker);
+                }
+
+                // ... (Garde ton code existant en dessous pour prévenir les rôles avec onAttack et onDamageReceived)
+                PlayerData attackerData = main.GetData(attacker);
+                if (attackerData != null && attackerData.role != null) {
+                    attackerData.role.onAttack(attacker, victim);
+                }
+
+                PlayerData victimData = main.GetData(victim);
+                if (victimData != null && victimData.role != null) {
+                    victimData.role.onDamageReceived(victim, attacker, event.getDamage(), event);
+                }
             }
         }
     }

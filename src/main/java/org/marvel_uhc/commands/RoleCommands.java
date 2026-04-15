@@ -18,6 +18,7 @@ public class RoleCommands {
                 .withShortDescription("Permet de se donner un rôle pour les tests");
 
         // On ajoute nos sous-commandes (ex: /mc_role_debug iron_man)
+        //Avengers
         debugCommand.withSubcommand(createDebugSubCommand("iron_man", RoleManager.ROLES.IronMan));
         debugCommand.withSubcommand(createDebugSubCommand("captain_america", RoleManager.ROLES.CaptainAmerica));
         debugCommand.withSubcommand(createDebugSubCommand("nick_fury", RoleManager.ROLES.NickFury));
@@ -31,6 +32,40 @@ public class RoleCommands {
         debugCommand.withSubcommand(createDebugSubCommand("hawkeye", RoleManager.ROLES.Hawkeye));
         debugCommand.withSubcommand(createDebugSubCommand("vision", RoleManager.ROLES.Vision));
         debugCommand.withSubcommand(createDebugSubCommand("wanda", RoleManager.ROLES.Wanda));
+
+        // Mutants
+        debugCommand.withSubcommand(createDebugSubCommand("charlesxavier", RoleManager.ROLES.CharlesXavier));
+        debugCommand.withSubcommand(createDebugSubCommand("magneto", RoleManager.ROLES.Magneto));
+        debugCommand.withSubcommand(createDebugSubCommand("wolverine", RoleManager.ROLES.Wolverine));
+        debugCommand.withSubcommand(createDebugSubCommand("x23", RoleManager.ROLES.X23));
+        debugCommand.withSubcommand(createDebugSubCommand("quicksilver", RoleManager.ROLES.Quicksilver));
+        debugCommand.withSubcommand(createDebugSubCommand("thebeast", RoleManager.ROLES.TheBeast));
+        debugCommand.withSubcommand(createDebugSubCommand("colossus", RoleManager.ROLES.Colossus));
+        debugCommand.withSubcommand(createDebugSubCommand("emmafrost", RoleManager.ROLES.EmmaFrost));
+        debugCommand.withSubcommand(createDebugSubCommand("iceberg", RoleManager.ROLES.Iceberg));
+        debugCommand.withSubcommand(createDebugSubCommand("pyro", RoleManager.ROLES.Pyro));
+        debugCommand.withSubcommand(createDebugSubCommand("malicia", RoleManager.ROLES.Malicia));
+        debugCommand.withSubcommand(createDebugSubCommand("diablo", RoleManager.ROLES.Diablo));
+        debugCommand.withSubcommand(createDebugSubCommand("mystique", RoleManager.ROLES.Mystique));
+        debugCommand.withSubcommand(createDebugSubCommand("jeangrey", RoleManager.ROLES.JeanGrey));
+
+        // Super-Villains
+        debugCommand.withSubcommand(createDebugSubCommand("ultron", RoleManager.ROLES.Ultron));
+        debugCommand.withSubcommand(createDebugSubCommand("thanos", RoleManager.ROLES.Thanos));
+        debugCommand.withSubcommand(createDebugSubCommand("ebonymaw", RoleManager.ROLES.EbonyMaw));
+        debugCommand.withSubcommand(createDebugSubCommand("ronan", RoleManager.ROLES.Ronan));
+        debugCommand.withSubcommand(createDebugSubCommand("redskull", RoleManager.ROLES.RedSkull));
+        debugCommand.withSubcommand(createDebugSubCommand("baronzemo", RoleManager.ROLES.BaronZemo));
+        debugCommand.withSubcommand(createDebugSubCommand("wintersoldier", RoleManager.ROLES.WinterSoldier));
+        debugCommand.withSubcommand(createDebugSubCommand("doctorfatalis", RoleManager.ROLES.DoctorFatalis));
+        debugCommand.withSubcommand(createDebugSubCommand("apocalypse", RoleManager.ROLES.Apocalypse));
+        debugCommand.withSubcommand(createDebugSubCommand("kang", RoleManager.ROLES.Kang));
+        debugCommand.withSubcommand(createDebugSubCommand("doctoroctopus", RoleManager.ROLES.DoctorOctopus));
+
+        // Anti-Heroes
+        debugCommand.withSubcommand(createDebugSubCommand("venom", RoleManager.ROLES.Venom));
+        debugCommand.withSubcommand(createDebugSubCommand("loki", RoleManager.ROLES.Loki));
+        debugCommand.withSubcommand(createDebugSubCommand("deadpool", RoleManager.ROLES.Deadpool));
 
         // On enregistre la commande principale et toutes ses sous-commandes d'un coup !
         debugCommand.register();
